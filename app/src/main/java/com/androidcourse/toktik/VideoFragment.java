@@ -2,6 +2,7 @@ package com.androidcourse.toktik;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -54,6 +55,7 @@ public class VideoFragment extends Fragment {
     private ImageView avatarImageView;
     private TextView likeNumTextView;
     private ImageView likeButton;
+    private ImageView share;
 
     private long lastDoubleClick = 0; // 上一次double click的timestamp
     private long doubleClickDelta = 500; //双击识别的最大时间
@@ -120,6 +122,7 @@ public class VideoFragment extends Fragment {
         fullTime = getView().findViewById(R.id.fullTime);
         videoSeekBar = getView().findViewById(R.id.videoSeekBar);
         surface = getView().findViewById(R.id.surface);
+        share = getView().findViewById(R.id.share);
 
         nicknameTextView = getView().findViewById(R.id.nickname);
         descriptionTextView = getView().findViewById(R.id.description);
@@ -160,6 +163,19 @@ public class VideoFragment extends Fragment {
             }
         });
         likeNumTextView.setText(convertLikeNum(likeNum));
+
+        // 分享功能实现
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String shareMsg = "好友邀请你来看【"+description+"】视频，快点击链接查看吧："+videoLink;
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT,shareMsg);
+                intent.setType("text/plain");
+                startActivity(Intent.createChooser(intent,getResources().getText(R.string.app_name)));
+            }
+        });
 
         //传递播放控件
         videoPlayer.setControlBar(controlBar);
