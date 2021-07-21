@@ -109,6 +109,8 @@ public class VideoManager {
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
         //开启硬解码
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+        //设置精准seek
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         mMediaPlayer = ijkMediaPlayer;
         mMediaPlayer.setSpeed(1f);
     }
