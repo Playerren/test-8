@@ -28,11 +28,12 @@ import androidx.annotation.RequiresApi;
 import com.androidcourse.toktik.R;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class VideoPlayerIJK extends FrameLayout {
 
     private VideoManager videoManager;
-
+    Runnable flushBar;
     private boolean hasCreateSurfaceView = false;
 
     private SurfaceView surfaceView;
@@ -42,8 +43,28 @@ public class VideoPlayerIJK extends FrameLayout {
     private TextView currTime;
     private TextView fullTime;
     private SeekBar videoSeekBar;
+    private LinearLayout timeInfo;
+
+    private boolean mDragging = false;
+    private int newPosition = 0;
+
+    private boolean firstLoad = true;
+    private IMediaPlayer.OnPreparedListener onPreparedListener = new IMediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(IMediaPlayer iMediaPlayer) {
+
+        }
+    };
+    private IMediaPlayer.OnCompletionListener onCompletionListener = new IMediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(IMediaPlayer iMediaPlayer) {
+
+        }
+    };
+
 
     private Handler seekBarHandler;
+    private PlayerSurfaceCallback callback;
 
     public void setPlayorpauseButton(ImageButton playorpauseButton) {
         this.playorpauseButton = playorpauseButton;
@@ -65,6 +86,10 @@ public class VideoPlayerIJK extends FrameLayout {
         this.videoSeekBar = videoSeekBar;
     }
 
+    public void setTimeInfo(LinearLayout timeInfo) {
+        this.timeInfo = timeInfo;
+    }
+
     private VideoTouchListener videoTouchListener;
 
     public VideoPlayerIJK(@NonNull Context context) {
@@ -84,8 +109,15 @@ public class VideoPlayerIJK extends FrameLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void init(){
+    public void preInit(){
         videoManager = new VideoManager(getContext());
+    }
+
+    /**
+     * 播放器管理器初始化，设置播放控制行为（播放/停止按钮，进度条与时间显示）
+     */
+    public void init(){
+
         this.videoTouchListener = new VideoTouchListener() {
             @Override
             public void onSingleTouch() { }
@@ -110,25 +142,30 @@ public class VideoPlayerIJK extends FrameLayout {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser){
-                    videoManager.seekTo(progress);
-                    if(!videoManager.isPlaying()){
-                        videoManager.start();
-                    }
+                    newPosition = progress;
+                    seekBarHandler.removeCallbacks(VideoPlayerIJK.this.flushBar);
+                    currTime.setText(longToTime(progress));
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                mDragging=true;
+                showTimeInfo();
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                mDragging=false;
+                seekBarHandler.postDelayed(flushBar,1000);
+                videoManager.seekTo((newPosition));
+                hideTimeInfo();
             }
         });
+
+        // 进度条刷新定时任务
         seekBarHandler = new Handler();
-        Runnable flushBar = new Runnable() {
+        flushBar = new Runnable() {
             @Override
             public void run() {
                 videoSeekBar.setMax((int) (videoManager.getDuration()));
@@ -138,6 +175,8 @@ public class VideoPlayerIJK extends FrameLayout {
                 fullTime.setText(longToTime(videoManager.getDuration()));
             }
         };
+
+        //默认开始进度条刷新
         seekBarHandler.removeCallbacks(flushBar);
         seekBarHandler.postDelayed(flushBar,1000);
     }
@@ -160,19 +199,25 @@ public class VideoPlayerIJK extends FrameLayout {
         videoManager.setVideoUri(uri);
     }
 
+    /**
+     * 开始播放：创建播放界面 加载
+     */
     public void startPlay(){
-        createSurfaceView();
+        Log.d("video-debug","load resource");
+        //先加载资源
         videoManager.load();
+        //再创建播放界面
+        Log.d("video-debug","create surface");
+        createSurfaceView();
+
+        // 设置准备好开始播放的事件：处理显示范围
         videoManager.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer iMediaPlayer) {
-                int w = VideoPlayerIJK.this.getWidth();
-                int h = VideoPlayerIJK.this.getHeight();
-                Log.d("size-changed","w:"+w+" h:"+h);
+                int width = VideoPlayerIJK.this.getWidth();
+                int height = VideoPlayerIJK.this.getHeight();
                 int vWidth = videoManager.getVideoWidth();
                 int vHeight = videoManager.getVideoHeight();
-                int width = w;
-                int height= h;
                 if(height==0||vHeight==0){
                     return;
                 }
@@ -184,13 +229,8 @@ public class VideoPlayerIJK extends FrameLayout {
                 }else{
                     VideoPlayerIJK.this.setSize((height*vWidth)/vHeight,height);
                 }
-            }
-        });
-
-        videoManager.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(IMediaPlayer iMediaPlayer) {
-
+                // 调用custom listener
+                onPreparedListener.onPrepared(iMediaPlayer);
             }
         });
     }
@@ -207,7 +247,8 @@ public class VideoPlayerIJK extends FrameLayout {
     private void createSurfaceView() {
         //生成一个新的surface view
         surfaceView = new SurfaceView(getContext());
-        surfaceView.getHolder().addCallback(new PlayerSurfaceCallback());
+        callback = new PlayerSurfaceCallback();
+        surfaceView.getHolder().addCallback(callback);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                 , ViewGroup.LayoutParams.MATCH_PARENT);
         surfaceView.setLayoutParams(layoutParams);
@@ -234,6 +275,7 @@ public class VideoPlayerIJK extends FrameLayout {
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
+            videoManager.stop();
             videoManager.release();
         }
     }
@@ -249,13 +291,23 @@ public class VideoPlayerIJK extends FrameLayout {
         this.setLayoutParams(thislayout);
     }
 
+    private void showTimeInfo(){
+        timeInfo.setAlpha(1f);
+    }
+
+    private void hideTimeInfo(){
+        timeInfo.setAlpha(0f);
+    }
+
     /**
-     * 开始播放
+     * 开始播放，如果发现视频还无法播放则会先创建播放控件
      */
     public void start() {
         if(videoManager.isPlayable()){
+            Log.d("video-debug","video can play, normal play");
             videoManager.start();
         }else{
+            Log.d("video-debug","video cannot play");
             this.startPlay();
         }
 
@@ -265,6 +317,10 @@ public class VideoPlayerIJK extends FrameLayout {
      * 释放现有的资源
      */
     public void release() {
+        if(surfaceView!=null&&surfaceView.getHolder()!=null){
+            surfaceView.getHolder().removeCallback(callback);
+            callback=null;
+        }
         videoManager.release();
     }
 
@@ -332,6 +388,51 @@ public class VideoPlayerIJK extends FrameLayout {
             sec = "0"+sec;
         }
         return min+":"+sec;
+    }
+
+    //播放完成
+    public void setOnCompletionListener(IMediaPlayer.OnCompletionListener onCompletionListener){
+        videoManager.setOnCompletionListener(onCompletionListener);
+    }
+
+    //缓冲中
+    public void setOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener){
+        videoManager.setOnBufferingUpdateListener(onBufferingUpdateListener);
+    }
+
+    public void setOnControlMessageListener(IjkMediaPlayer.OnControlMessageListener onControlMessageListener){
+        videoManager.setOnControlMessageListener(onControlMessageListener);
+    }
+
+    //视频大小发生变化
+    public void setOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener){
+        videoManager.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+    }
+
+    public void setOnMediaCodecSelectListener(IjkMediaPlayer.OnMediaCodecSelectListener onMediaCodecSelectListener){
+        videoManager.setOnMediaCodecSelectListener(onMediaCodecSelectListener);
+    }
+
+    public void setOnNativeInvokeListener(IjkMediaPlayer.OnNativeInvokeListener onNativeInvokeListener){
+        videoManager.setOnNativeInvokeListener(onNativeInvokeListener);
+    }
+
+    //播放过程中发生了错误
+    public void setOnErrorListener(IMediaPlayer.OnErrorListener onErrorListener){
+        videoManager.setOnErrorListener(onErrorListener);
+    }
+
+    public void setOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener){
+        videoManager.setOnSeekCompleteListener(onSeekCompleteListener);
+    }
+
+    //信息监听
+    public void setOnInfoListener(IMediaPlayer.OnInfoListener onInfoListener){
+        videoManager.setOnInfoListener(onInfoListener);
+    }
+
+    public void setOnPreparedListener(IMediaPlayer.OnPreparedListener onPreparedListener){
+        this.onPreparedListener = onPreparedListener;
     }
 
 }

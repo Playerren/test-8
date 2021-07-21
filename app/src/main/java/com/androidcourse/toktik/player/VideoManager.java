@@ -26,9 +26,6 @@ public class VideoManager {
     private int videoResourceId = 0;
 
     private boolean cycle = true;
-    private boolean autoStart = true;
-
-    private boolean prepareAsyncFinished = false;
 
     public VideoManager(Context context){
         if(firstLoad){
@@ -49,8 +46,10 @@ public class VideoManager {
     }
 
     public void setVideoPath(String videoPath) {
+        String path = ProxyServer.getProxy(context).getProxyUrl(videoPath);
         this.mediaSourceType = MediaSourceType.LINK;
-        this.videoPath = videoPath;
+        this.videoPath = path;
+        Log.d("download",path);
     }
 
     public void setVideoUri(Uri videoUri) {
@@ -262,6 +261,10 @@ public class VideoManager {
         mMediaPlayer.setOnInfoListener(onInfoListener);
     }
 
+    /**
+     * 必须调用来初始化加载完成自动播放行为
+     * @param onPreparedListener
+     */
     public void setOnPreparedListener(IMediaPlayer.OnPreparedListener onPreparedListener){
         mMediaPlayer.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
