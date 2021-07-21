@@ -7,10 +7,17 @@
     tools:context=".VideoPlayActivity"
     android:background="@color/black">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/main_srl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

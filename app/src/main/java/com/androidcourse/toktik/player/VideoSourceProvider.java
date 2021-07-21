@@ -31,6 +31,12 @@ public class VideoSourceProvider {
 
     private ArrayList<Video> videoList = new ArrayList<>();
 
+    public void flush(){
+        startbound = 0;
+        endbound = -1;
+        videoList.clear();
+    }
+
     public void prevAcquire(VideoSourceLoadFinishedCallback videoSourceLoadFinishedCallback){
         if(startbound==0){
             videoSourceLoadFinishedCallback.onVideoSourceLoadFinished(null);
