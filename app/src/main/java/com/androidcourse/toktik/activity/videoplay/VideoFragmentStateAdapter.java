@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -19,14 +20,17 @@ import java.util.ArrayList;
  * viewpager2 adapter
  */
 public class VideoFragmentStateAdapter extends FragmentStateAdapter {
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<Fragment> videoFragmentList = new ArrayList<>() ;
     private ArrayList<Long> idList = new ArrayList<>();
     private int mapcount = 0;
     private int maxcount = 5;
     private long videoCount = 0;
 
-    public VideoFragmentStateAdapter(@NonNull  FragmentActivity fragmentActivity) {
+    public VideoFragmentStateAdapter(@NonNull  FragmentActivity fragmentActivity, SwipeRefreshLayout swipeRefreshLayout) {
         super(fragmentActivity);
+        this.swipeRefreshLayout = swipeRefreshLayout;
+        swipeRefreshLayout.setRefreshing(true);
         init();
     }
 
@@ -39,7 +43,19 @@ public class VideoFragmentStateAdapter extends FragmentStateAdapter {
         super(fragmentManager, lifecycle);
     }
 
-    private void init(){
+    public void flush(){
+        VideoSourceProvider.getINSTANCE(null).flush();
+        swipeRefreshLayout.setRefreshing(true);
+        mapcount = 0;
+        maxcount = 5;
+        videoCount = 0;
+        videoFragmentList.clear();
+        idList.clear();
+        notifyDataSetChanged();
+        init();
+    }
+
+    public void init(){
         for(int i=0;i<3;i++){
             VideoSourceProvider.getINSTANCE(null).endAcquire(new VideoSourceLoadFinishedCallback() {
                 @Override
@@ -49,6 +65,7 @@ public class VideoFragmentStateAdapter extends FragmentStateAdapter {
                         lastAdd(fragment);
                     }
                     notifyDataSetChanged();
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             });
         }

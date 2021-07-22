@@ -1,6 +1,7 @@
 package com.androidcourse.toktik.activity.videoplay;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -18,6 +19,7 @@ import com.androidcourse.toktik.util.ProxyServer;
 public class VideoPlayActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private Button b1;
     private Button b3;
@@ -27,8 +29,9 @@ public class VideoPlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
         viewPager = findViewById(R.id.pager);
+        swipeRefreshLayout = findViewById(R.id.main_srl);
         ProxyServer.getProxy(getApplicationContext());
-        VideoFragmentStateAdapter videoFragmentStateAdapter = new VideoFragmentStateAdapter(this);
+        VideoFragmentStateAdapter videoFragmentStateAdapter = new VideoFragmentStateAdapter(this, swipeRefreshLayout);
         viewPager.setAdapter(videoFragmentStateAdapter);
         getSupportActionBar().hide();
 
@@ -59,6 +62,12 @@ public class VideoPlayActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO 跳转到拍摄界面
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                videoFragmentStateAdapter.flush();
             }
         });
     }
