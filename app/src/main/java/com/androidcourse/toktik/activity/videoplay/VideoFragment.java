@@ -2,12 +2,17 @@ package com.androidcourse.toktik.activity.videoplay;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -20,8 +25,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidcourse.toktik.R;
+import com.androidcourse.toktik.db.FavorContract;
+import com.androidcourse.toktik.db.FavorDbHelper;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.player.TouchView;
 import com.androidcourse.toktik.player.VideoPlayerIJK;
@@ -54,6 +62,10 @@ public class VideoFragment extends Fragment {
     private ImageView likeButton;
     private ImageView share;
 
+    private ConstraintLayout favorbar;
+
+    private ImageView favor;
+
     private long lastDoubleClick = 0; // 上一次double click的timestamp
     private long doubleClickDelta = 500; //双击识别的最大时间
     private String imageLink = ""; // 视频的封面图连接
@@ -63,6 +75,8 @@ public class VideoFragment extends Fragment {
     private String description = "";
     private int likeNum = 0;
     private boolean liked = false;
+    private boolean favorbarshowing = false;
+    private boolean stard = false;
 
     public VideoFragment() {
     }
@@ -127,6 +141,8 @@ public class VideoFragment extends Fragment {
         likeNumTextView = getView().findViewById(R.id.likenum);
         likeButton = getView().findViewById(R.id.like);
         timeInfo = getView().findViewById(R.id.timeInfo);
+        favor = getView().findViewById(R.id.favor);
+        favorbar = getView().findViewById(R.id.favorbar);
 
         // 封面图初始化
         if (imageLink != null && !imageLink.isEmpty()) {
@@ -205,6 +221,21 @@ public class VideoFragment extends Fragment {
                 videoPlayer.setVideoResource(R.raw.hourse);
             }
 
+        }
+
+        FavorDbHelper dbHelper = new FavorDbHelper(getContext());
+        SQLiteDatabase dbr = dbHelper.getReadableDatabase();
+        String[] proj = {
+                BaseColumns._ID,
+        };
+        String selec = FavorContract.FavorEntry.COLUMN_NAME_FEED_URL + " = ?";
+        String[] args = {videoLink};
+        Cursor cursor = dbr.query(FavorContract.FavorEntry.TABLE_NAME,
+                proj,
+                selec,args,null,null,null);
+        if(cursor.getCount()!=0){
+            favor.setImageDrawable(getContext().getDrawable(R.drawable.starred));
+            stard = true;
         }
         Log.d("fragment", this.toString());
     }
@@ -333,6 +364,53 @@ public class VideoFragment extends Fragment {
         Log.d("video-debug", isVisibleToUser + ":visible?");
     }
 
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            FavorDbHelper dbHelper = new FavorDbHelper(getContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            if(!stard){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_AVATAR,avatarLink);
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_FEED_URL,videoLink);
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_THUMBNAILS,imageLink);
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_NICKNAME,nickname);
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_DESCRIPTION,description);
+                contentValues.put(FavorContract.FavorEntry.COLUMN_NAME_LIKE_COUNT,likeNum);
+                long newRow = db.insert(FavorContract.FavorEntry.TABLE_NAME,null,contentValues);
+                Toast.makeText(getContext(),"收藏成功，您可以在收藏中心查看",Toast.LENGTH_SHORT).show();
+                VideoFragment.this.favor.setImageDrawable(getContext().getDrawable(R.drawable.starred));
+                VideoFragment.this.stard = true;
+            }else{
+                String selec = FavorContract.FavorEntry.COLUMN_NAME_FEED_URL + " = ?";
+                String[] args = {videoLink};
+                db.delete(FavorContract.FavorEntry.TABLE_NAME,selec,args);
+                Toast.makeText(getContext(),"取消收藏成功",Toast.LENGTH_SHORT).show();
+                VideoFragment.this.stard = false;
+                VideoFragment.this.favor.setImageDrawable(getContext().getDrawable(R.drawable.favor));
+            }
+        }
+    };
+
+
+
+    private void showCtrl(){
+        favorbarshowing = true;
+        favorbar.setAlpha(1f);
+        favor.setOnClickListener(onClickListener);
+    }
+
+    private void hideCtrl(){
+        favorbarshowing = false;
+        favorbar.setAlpha(0f);
+        favor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         public MyGestureListener() {
@@ -353,8 +431,14 @@ public class VideoFragment extends Fragment {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.e(TAG, "onSingleTapConfirmed");
+
             if (VideoFragment.this != null) {
-                VideoFragment.this.singleClick();
+                if(VideoFragment.this.favorbarshowing){
+                    VideoFragment.this.hideCtrl();
+                }else {
+                    VideoFragment.this.singleClick();
+                }
+
             }
 
             return true;
@@ -369,6 +453,11 @@ public class VideoFragment extends Fragment {
         @Override
         public void onLongPress(MotionEvent e) {
             //Log.e(TAG, "onLongPress");
+            if (VideoFragment.this != null) {
+                if(!VideoFragment.this.favorbarshowing){
+                    VideoFragment.this.showCtrl();
+                }
+            }
         }
     }
 
