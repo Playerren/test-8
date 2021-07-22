@@ -10,7 +10,48 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/vp_l"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <LinearLayout
+        android:id="@+id/vp_l"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/vp_b1"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="精选"
+            android:background="#00ffff"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/vp_b2"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="推荐"
+            android:textSize="16sp"
+            android:background="#00ffff" />
+
+        <Button
+            android:id="@+id/vp_b3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="拍摄"
+            android:textSize="12sp"
+            android:background="#00ffff" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

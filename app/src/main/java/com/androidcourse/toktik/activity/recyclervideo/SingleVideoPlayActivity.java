@@ -25,6 +25,8 @@ public class SingleVideoPlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_video_play);
+        getSupportActionBar().hide();
+
         Intent intent = getIntent();
         String avatar = intent.getStringExtra("avatar");
         String feedUrl = intent.getStringExtra("feedUrl");
