@@ -23,18 +23,18 @@ public class FavorContract {
 
         public static final String COLUMN_NAME_THUMBNAILS = "thumbnails";
 
-        public static final String SQL_CREATE_ENTRIES =
-                "CREATE TABLE " + FavorEntry.TABLE_NAME + " (" +
-                        FavorEntry._ID + " INTEGER PRIMARY KEY," +
-                        FavorEntry.COLUMN_NAME_FEED_URL + " TEXT," +
-                        FavorEntry.COLUMN_NAME_NICKNAME + " TEXT," +
-                        FavorEntry.COLUMN_NAME_DESCRIPTION + " TEXT," +
-                        FavorEntry.COLUMN_NAME_LIKE_COUNT + " INTEGER," +
-                        FavorEntry.COLUMN_NAME_AVATAR + " TEXT," +
-                        FavorEntry.COLUMN_NAME_THUMBNAILS + " TEXT)";
-
-        public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + FavorEntry.TABLE_NAME;
-
     }
+
+    public static final String SQL_CREATE_ENTRIES =
+            "CREATE TABLE " + FavorEntry.TABLE_NAME + " (" +
+                    FavorEntry._ID + " INTEGER PRIMARY KEY," +
+                    FavorEntry.COLUMN_NAME_FEED_URL + " TEXT," +
+                    FavorEntry.COLUMN_NAME_NICKNAME + " TEXT," +
+                    FavorEntry.COLUMN_NAME_DESCRIPTION + " TEXT," +
+                    FavorEntry.COLUMN_NAME_LIKE_COUNT + " INTEGER," +
+                    FavorEntry.COLUMN_NAME_AVATAR + " TEXT," +
+                    FavorEntry.COLUMN_NAME_THUMBNAILS + " TEXT)";
+
+    public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + FavorEntry.TABLE_NAME;
 
 }
