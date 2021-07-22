@@ -1,6 +1,7 @@
 package com.androidcourse.toktik.activity.recyclervideo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,15 +28,21 @@ public class CoverViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Video video, Context context) {
-        // TODO 设置图片
         Glide.with(context).load(LoadImage.getResourceId(video.getThumbnails())).into(cover);
         Log.e(TAG, "bind: " + video.getThumbnails());
         title.setText(video.getDescription());
         cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 跳转到视频播放页面
+                Intent myIntent = new Intent(view.getContext(), SingleVideoPlayActivity.class);
+                myIntent.putExtra("avatar", video.getAvatar());
+                myIntent.putExtra("feedUrl", video.getFeedUrl());
+                myIntent.putExtra("description", video.getDescription());
+                myIntent.putExtra("likeCount", video.getLikeCount());
+                myIntent.putExtra("thumbnails", video.getThumbnails());
+                myIntent.putExtra("nickname", video.getNickname());
                 Log.e(TAG, "onClick: goto video");
+                view.getContext().startActivity(myIntent);
             }
         });
     }
