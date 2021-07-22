@@ -4,30 +4,47 @@
     package="com.androidcourse.toktik">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-feature android:name="android.hardware.camera" />
     <!--相机权限-->
     <uses-permission android:name="android.permission.CAMERA" />
     <!--写入SD卡的权限：如果你希望保存相机拍照后的照片-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--读取SD卡的权限:打开相册选取图片所必须的权限-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions"></uses-permission>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Toktik">
-        <activity android:name=".MainActivity">
-            <intent-filter>
+        android:theme="@style/Theme.Toktik"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.recyclervideo.SingleVideoPlayActivity" />
+        <activity android:name=".activity.recyclervideo.RecyclerVideoActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".activity.videoplay.VideoPlayActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             </intent-filter>
+        </activity>
+        <activity android:name=".activity.MainActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity android:name=".VideoCameraActivity">
 
