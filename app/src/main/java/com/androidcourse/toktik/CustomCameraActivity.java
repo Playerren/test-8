@@ -50,6 +50,7 @@ public class CustomCameraActivity extends AppCompatActivity implements SurfaceHo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_custom_camera);
@@ -204,7 +205,7 @@ public class CustomCameraActivity extends AppCompatActivity implements SurfaceHo
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-        path = getOutputMediaFile(MEDIA_TYPE_VIDEO);
+        path = getOutputMediaFile(MEDIA_TYPE_VIDEO,getApplicationContext());
         Log.d(TAB,path);
         mMediaRecorder.setOutputFile(path);
         mMediaRecorder.setPreviewDisplay(mSurfaceView.getHolder().getSurface());

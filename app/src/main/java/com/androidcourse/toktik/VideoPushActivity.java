@@ -14,6 +14,10 @@ import android.widget.RadioGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.androidcourse.toktik.activity.recyclervideo.RecyclerVideoActivity;
+import com.androidcourse.toktik.activity.recyclervideo.SingleVideoPlayActivity;
+import com.androidcourse.toktik.activity.videoplay.VideoPlayActivity;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,13 +39,14 @@ public class VideoPushActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_videopush);
+        setContentView(R.layout.activity_video_push);
+        getSupportActionBar().hide();
         //新页面接收数据
         Bundle bundle = this.getIntent().getExtras();
         //接收name值
         videoPath = bundle.getString("videoPath");
         Log.i("获取到的视频地址为",videoPath);
-
+        editText = findViewById(R.id.description);
         initButton();
         initImgView();
     }
@@ -86,7 +91,14 @@ public class VideoPushActivity extends AppCompatActivity {
 
         open = findViewById(R.id.btn_open);
         open.setOnClickListener(v->{
-
+            Intent myIntent = new Intent(VideoPushActivity.this, SingleVideoPlayActivity.class);
+            myIntent.putExtra("avatar", "");
+            myIntent.putExtra("feedUrl", videoPath);
+            myIntent.putExtra("description", editText.getText().toString());
+            myIntent.putExtra("likeCount",0);
+            myIntent.putExtra("thumbnails", "");
+            myIntent.putExtra("nickname", "我");
+            startActivity(myIntent);
         });
     }
 

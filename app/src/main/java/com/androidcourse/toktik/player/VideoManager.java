@@ -50,10 +50,14 @@ public class VideoManager {
     }
 
     public void setVideoPath(String videoPath) {
-        String path = ProxyServer.getProxy(context).getProxyUrl(videoPath);
         this.mediaSourceType = MediaSourceType.LINK;
-        this.videoPath = path;
-        Log.d("download", path);
+        Log.d("video",videoPath);
+        if(videoPath.startsWith("/")){
+            this.videoPath =  videoPath;
+        }else{
+            String path = ProxyServer.getProxy(context).getProxyUrl(videoPath);
+            this.videoPath = path;
+        }
     }
 
     public void setVideoUri(Uri videoUri) {

@@ -107,8 +107,8 @@ public class Utils {
     /**
      * Create a File for saving an image or video
      */
-    public static String getOutputMediaFile(int type) {
-        File mediaStorageDir = new File(getPath());
+    public static String getOutputMediaFile(int type, Context c) {
+        File mediaStorageDir = c.getExternalFilesDir("video");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 return null;
@@ -121,11 +121,15 @@ public class Utils {
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
             String imageName = String.format(Locale.getDefault(), "img_%d.jpg", System.currentTimeMillis());
-            mediaFile = new File(getPath() + File.separator +
+//            mediaFile = new File(getPath() + File.separator +
+//                    imageName);
+            mediaFile = new File(mediaStorageDir.getAbsolutePath() + File.separator +
                     imageName);
         } else if (type == MEDIA_TYPE_VIDEO) {
             String videoName = String.format(Locale.getDefault(), "vid_%d.mp4", System.currentTimeMillis());
-            mediaFile = new File(getPath() + File.separator +
+//            mediaFile = new File(getPath() + File.separator +
+//                    videoName);
+            mediaFile = new File(mediaStorageDir.getAbsolutePath() + File.separator +
                     videoName);
         } else {
             return null;
@@ -135,6 +139,7 @@ public class Utils {
     }
 
     private static String getPath() {
+
         return path;
     }
 
