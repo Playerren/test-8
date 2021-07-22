@@ -17,13 +17,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class VideoSourceProvider {
     private static VideoSourceProvider INSTANCE;
 
-    public static VideoSourceProvider getINSTANCE(Context context){
-        if(INSTANCE == null){
+    public static VideoSourceProvider getINSTANCE(Context context) {
+        if (INSTANCE == null) {
             INSTANCE = new VideoSourceProvider();
             INSTANCE.context = context;
         }
         return INSTANCE;
     }
+
     private int startbound = 0;
     private int endbound = -1;
     private ApiService apiService;
@@ -31,38 +32,38 @@ public class VideoSourceProvider {
 
     private ArrayList<Video> videoList = new ArrayList<>();
 
-    public void prevAcquire(VideoSourceLoadFinishedCallback videoSourceLoadFinishedCallback){
-        if(startbound==0){
+    public void prevAcquire(VideoSourceLoadFinishedCallback videoSourceLoadFinishedCallback) {
+        if (startbound == 0) {
             videoSourceLoadFinishedCallback.onVideoSourceLoadFinished(null);
-        }else{
-            if(endbound-startbound>=5) {
+        } else {
+            if (endbound - startbound >= 5) {
                 endbound--;
             }
             videoSourceLoadFinishedCallback.onVideoSourceLoadFinished(videoList.get(--startbound));
         }
     }
 
-    public void endAcquire(VideoSourceLoadFinishedCallback videoSourceLoadFinishedCallback){
-        if(videoList.size()<=endbound+1){
+    public void endAcquire(VideoSourceLoadFinishedCallback videoSourceLoadFinishedCallback) {
+        if (videoList.size() <= endbound + 1) {
             List<Video> acquired = acquireNewVideo(new Callback() {
                 @Override
                 public void loadsuccessCallback(List<Video> videos) {
                     videoList.addAll(videos);
-                    for(int i=0;i<videoList.size();i++){
-                        Log.d("network",videoList.get(i).toString());
+                    for (int i = 0; i < videoList.size(); i++) {
+                        Log.d("network", videoList.get(i).toString());
                     }
-                    if(videoList.size()<=endbound+1){
+                    if (videoList.size() <= endbound + 1) {
                         videoSourceLoadFinishedCallback.onVideoSourceLoadFinished(null);
                     }
-                    if(endbound-startbound>=5) {
+                    if (endbound - startbound >= 5) {
                         startbound++;
                     }
                     endbound++;
                     videoSourceLoadFinishedCallback.onVideoSourceLoadFinished(videoList.get(endbound));
                 }
             });
-        }else{
-            if(endbound-startbound>=5) {
+        } else {
+            if (endbound - startbound >= 5) {
                 startbound++;
             }
             endbound++;
@@ -70,7 +71,7 @@ public class VideoSourceProvider {
         }
     }
 
-    private List<Video> acquireNewVideo(Callback callback){
+    private List<Video> acquireNewVideo(Callback callback) {
         List<Video> videos = new ArrayList<>();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://beiyou.bytedance.com/")
@@ -85,6 +86,7 @@ public class VideoSourceProvider {
                     callback.loadsuccessCallback(videos);
                 }
             }
+
             @Override
             public void onFailure(Call<List<Video>> call, Throwable t) {
 
@@ -94,7 +96,7 @@ public class VideoSourceProvider {
         return videos;
     }
 
-    interface Callback{
+    interface Callback {
         void loadsuccessCallback(List<Video> videos);
     }
 }

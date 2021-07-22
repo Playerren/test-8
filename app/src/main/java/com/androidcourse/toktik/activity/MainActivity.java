@@ -1,14 +1,11 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.androidcourse.toktik.player.ProxyServer;
+import com.androidcourse.toktik.R;
 import com.androidcourse.toktik.player.VideoPlayerIJK;
-
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class MainActivity extends AppCompatActivity {
 

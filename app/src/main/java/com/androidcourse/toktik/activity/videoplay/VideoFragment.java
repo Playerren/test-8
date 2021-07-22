@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.videoplay;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -8,14 +8,12 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,13 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.androidcourse.toktik.R;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.player.TouchView;
 import com.androidcourse.toktik.player.VideoPlayerIJK;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
-import java.util.Random;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -70,7 +67,7 @@ public class VideoFragment extends Fragment {
     public VideoFragment() {
     }
 
-    public VideoFragment(Video video){
+    public VideoFragment(Video video) {
         this.videoLink = video.getFeedUrl();
         this.imageLink = video.getThumbnails();
         this.avatarLink = video.getAvatar();
@@ -111,7 +108,7 @@ public class VideoFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.d("video-debug","acticity created");
+        Log.d("video-debug", "activity created");
         super.onActivityCreated(savedInstanceState);
         //组件获取
         coverPic = getView().findViewById(R.id.cover_image);
@@ -131,14 +128,14 @@ public class VideoFragment extends Fragment {
         likeButton = getView().findViewById(R.id.like);
         timeInfo = getView().findViewById(R.id.timeInfo);
 
-        //封面图初始化
-        if(imageLink!=null&&!imageLink.isEmpty()){
+        // 封面图初始化
+        if (imageLink != null && !imageLink.isEmpty()) {
 
             Glide.with(getContext()).load(imageLink).into(coverPic);
         }
-        nicknameTextView.setText("@"+nickname);
+        nicknameTextView.setText("@" + nickname);
         descriptionTextView.setText(description);
-        if(avatarLink!=null&&!avatarLink.isEmpty()){
+        if (avatarLink != null && !avatarLink.isEmpty()) {
             RequestOptions cropOptions = new RequestOptions();
             cropOptions.centerCrop().circleCrop();
             Glide.with(getContext()).load(avatarLink)
@@ -147,17 +144,17 @@ public class VideoFragment extends Fragment {
                     .fallback(R.drawable.user_avatar)
                     .apply(cropOptions).into(avatarImageView);
         }
-        if(liked){
+        if (liked) {
             likeButton.setImageDrawable(getContext().getDrawable(R.drawable.lovered));
-        }else{
+        } else {
             likeButton.setImageDrawable(getContext().getDrawable(R.drawable.lovewhite));
         }
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(liked){
+                if (liked) {
                     setUnlike();
-                }else{
+                } else {
                     setLike();
                 }
             }
@@ -168,12 +165,12 @@ public class VideoFragment extends Fragment {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String shareMsg = "好友邀请你来看【"+description+"】视频，快点击链接查看吧："+videoLink;
+                String shareMsg = "好友邀请你来看【" + description + "】视频，快点击链接查看吧：" + videoLink;
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT,shareMsg);
+                intent.putExtra(Intent.EXTRA_TEXT, shareMsg);
                 intent.setType("text/plain");
-                startActivity(Intent.createChooser(intent,getResources().getText(R.string.app_name)));
+                startActivity(Intent.createChooser(intent, getResources().getText(R.string.app_name)));
             }
         });
 
@@ -199,24 +196,24 @@ public class VideoFragment extends Fragment {
         videoPlayer.preInit();
         videoPlayer.init();
         // 准备视频资源
-        if(videoLink!=null&&!videoLink.isEmpty()){
+        if (videoLink != null && !videoLink.isEmpty()) {
             videoPlayer.setVideoPath(videoLink);
-        }else{
-            if(Math.random()<0.5){
+        } else {
+            if (Math.random() < 0.5) {
                 videoPlayer.setVideoResource(R.raw.bytedance);
-            }else {
+            } else {
                 videoPlayer.setVideoResource(R.raw.hourse);
             }
 
         }
-        Log.d("fragment",this.toString());
+        Log.d("fragment", this.toString());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //开始播放音频
-        Log.d("video-debug","fragment resume");
+        Log.d("video-debug", "fragment resume");
         videoPlayer.start();
     }
 
@@ -235,14 +232,14 @@ public class VideoFragment extends Fragment {
         videoPlayer.release();
     }
 
-    public void singleClick(){
+    public void singleClick() {
         long currTime = System.currentTimeMillis();
-        if(currTime-lastDoubleClick>doubleClickDelta){
-            if(videoPlayer.isPlaying()){
+        if (currTime - lastDoubleClick > doubleClickDelta) {
+            if (videoPlayer.isPlaying()) {
                 videoPlayer.pause();
                 playorpauseButton.setAlpha(1f);
                 playorpauseButton.setImageDrawable(getContext().getDrawable(R.drawable.pause));
-            }else{
+            } else {
                 videoPlayer.start();
                 playorpauseButton.setAlpha(0f);
                 playorpauseButton.setImageDrawable(getContext().getDrawable(R.drawable.play));
@@ -250,16 +247,16 @@ public class VideoFragment extends Fragment {
         }
     }
 
-    private void showCoverPic(){
+    private void showCoverPic() {
         coverPic.setAlpha(1f);
     }
 
-    private void hideCoverPic(){
+    private void hideCoverPic() {
         coverPic.setAlpha(0f);
     }
 
-    private void setLike(){
-        liked=true;
+    private void setLike() {
+        liked = true;
         likeButton.setImageDrawable(getContext().getDrawable(R.drawable.lovered));
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(scale(likeButton, "scaleX", 2f, 1f, 100, 0))
@@ -270,8 +267,8 @@ public class VideoFragment extends Fragment {
     }
 
 
-    private void setUnlike(){
-        liked=false;
+    private void setUnlike() {
+        liked = false;
         likeButton.setImageDrawable(getContext().getDrawable(R.drawable.lovewhite));
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(scale(likeButton, "scaleX", 2f, 1f, 100, 0))
@@ -322,18 +319,18 @@ public class VideoFragment extends Fragment {
         return translation;
     }
 
-    private String convertLikeNum(int num){
-        if(num<10000){
-            return num+"";
-        }else{
-            return num/10000+"."+(num%10000)/1000+"w";
+    private String convertLikeNum(int num) {
+        if (num < 10000) {
+            return num + "";
+        } else {
+            return num / 10000 + "." + (num % 10000) / 1000 + "w";
         }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d("video-debug",isVisibleToUser+":visible?");
+        Log.d("video-debug", isVisibleToUser + ":visible?");
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -356,7 +353,7 @@ public class VideoFragment extends Fragment {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Log.e(TAG, "onSingleTapConfirmed");
-            if(VideoFragment.this!=null){
+            if (VideoFragment.this != null) {
                 VideoFragment.this.singleClick();
             }
 
@@ -375,5 +372,5 @@ public class VideoFragment extends Fragment {
         }
     }
 
- }
+}
 

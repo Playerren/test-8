@@ -1,4 +1,4 @@
-package com.androidcourse.toktik.player;
+package com.androidcourse.toktik.util;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ public class ProxyServer {
     private static HttpProxyCacheServer proxy;
 
     public static HttpProxyCacheServer getProxy(Context context) {
-        return proxy==null?(proxy = newProxy(context)):proxy;
+        return proxy == null ? (proxy = newProxy(context)) : proxy;
     }
 
     private static HttpProxyCacheServer newProxy(Context context) {

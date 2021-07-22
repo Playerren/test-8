@@ -1,12 +1,12 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.videoplay;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
-import com.androidcourse.toktik.player.ProxyServer;
+import com.androidcourse.toktik.R;
+import com.androidcourse.toktik.util.ProxyServer;
 
 /**
  * 流式视频播放activity
@@ -29,11 +29,11 @@ public class VideoPlayActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if(position==0){
-                    videoFragmentStateAdapter.prevAddFragment(viewPager,1);
+                if (position == 0) {
+                    videoFragmentStateAdapter.prevAddFragment(viewPager, 1);
                 }
-                if(position==videoFragmentStateAdapter.getItemCount()-2){
-                    videoFragmentStateAdapter.lastAddFragment(viewPager,position-1);
+                if (position == videoFragmentStateAdapter.getItemCount() - 2) {
+                    videoFragmentStateAdapter.lastAddFragment(viewPager, position - 1);
                 }
             }
         });

@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.recyclervideo;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidcourse.toktik.R;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.util.LoadImage;
 import com.bumptech.glide.Glide;

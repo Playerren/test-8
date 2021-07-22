@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.recyclervideo;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidcourse.toktik.R;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.network.ApiService;
 

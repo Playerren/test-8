@@ -18,8 +18,6 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 
 import com.androidcourse.toktik.R;
-import com.androidcourse.toktik.VideoFragment;
-import com.androidcourse.toktik.util.LoadImage;
 import com.bumptech.glide.Glide;
 
 import java.util.Random;
@@ -64,20 +62,20 @@ public class TouchView extends RelativeLayout implements View.OnTouchListener {
         pic.setImageDrawable(getResources().getDrawable(R.drawable.lovered));
         pic.setLayoutParams(params);
         addView(pic);
-        if(imageLink!=null){
+        if (imageLink != null) {
             Glide.with(mContext).load(imageLink).into(pic);
         }
     }
 
-    public void setImageLink(String link){
-        if(link!=null&&!link.isEmpty()){
+    public void setImageLink(String link) {
+        if (link != null && !link.isEmpty()) {
             this.imageLink = link;
             Glide.with(mContext).load(link).into(pic);
         }
     }
 
-    public void setGestureListener(GestureDetector.SimpleOnGestureListener simpleOnGestureListener){
-        mGestureDetector = new GestureDetector(mContext,simpleOnGestureListener);
+    public void setGestureListener(GestureDetector.SimpleOnGestureListener simpleOnGestureListener) {
+        mGestureDetector = new GestureDetector(mContext, simpleOnGestureListener);
         mGestureDetector.setOnDoubleTapListener(simpleOnGestureListener);
     }
 
@@ -87,14 +85,14 @@ public class TouchView extends RelativeLayout implements View.OnTouchListener {
 
     }
 
-    public void  hide(){
-        if(pic!=null){
+    public void hide() {
+        if (pic != null) {
             pic.setAlpha(0f);
         }
     }
 
-    public void show(){
-        if(pic!=null){
+    public void show() {
+        if (pic != null) {
             pic.setAlpha(1f);
         }
     }
@@ -104,7 +102,7 @@ public class TouchView extends RelativeLayout implements View.OnTouchListener {
         return mGestureDetector.onTouchEvent(event);
     }
 
-    public void drawLovePic(MotionEvent event){
+    public void drawLovePic(MotionEvent event) {
         final ImageView imageView = new ImageView(mContext);
         LayoutParams params = new LayoutParams(300, 300);
         params.leftMargin = (int) event.getX() - 150;
@@ -116,7 +114,7 @@ public class TouchView extends RelativeLayout implements View.OnTouchListener {
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(scale(imageView, "scaleX", 2f, 0.9f, 100, 0))
                 .with(scale(imageView, "scaleY", 2f, 0.9f, 100, 0))
-                .with(rotation(imageView, 0, 0, randomDegree[new Random().nextInt(randomDegree.length-1)]))
+                .with(rotation(imageView, 0, 0, randomDegree[new Random().nextInt(randomDegree.length - 1)]))
                 .with(alpha(imageView, 0, 1, 100, 0))
                 .with(scale(imageView, "scaleX", 0.9f, 1, 50, 150))
                 .with(scale(imageView, "scaleY", 0.9f, 1, 50, 150))

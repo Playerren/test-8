@@ -15,10 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Toktik"
         android:usesCleartextTraffic="true">
-        <activity android:name=".SingleVideoPlayActivity">
+        <activity android:name=".activity.recyclervideo.SingleVideoPlayActivity">
 
         </activity>
-        <activity android:name=".RecyclerVideoActivity">
+        <activity android:name=".activity.recyclervideo.RecyclerVideoActivity">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -27,7 +27,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".VideoPlayActivity"
+        <activity android:name=".activity.videoplay.VideoPlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".activity.MainActivity"></activity>
     </application>
 
 </manifest>
