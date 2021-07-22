@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <SurfaceView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+    <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="155dp"
+        android:layout_marginBottom="188dp"
+        android:format="%s"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="35dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/btn_record"
+            android:layout_width="151dp"
+            android:layout_height="136dp"
+            android:src="@drawable/radiobuttonunselect"
+            android:text="record" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btn_facing"
+        android:layout_width="26dp"
+        android:layout_height="23dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/cameratrans">
+
+    </ImageView>
+
+
+    <ImageView
+        android:id="@+id/btn_fask"
+        android:layout_width="28dp"
+        android:layout_height="32dp"
+        android:layout_below="@+id/btn_facing"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/fask">
+
+    </ImageView>
+
+</RelativeLayout>
