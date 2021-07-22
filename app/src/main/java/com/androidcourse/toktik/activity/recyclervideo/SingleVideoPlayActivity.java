@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.recyclervideo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.androidcourse.toktik.R;
+import com.androidcourse.toktik.activity.videoplay.VideoFragment;
 import com.androidcourse.toktik.entity.Video;
 
 /**

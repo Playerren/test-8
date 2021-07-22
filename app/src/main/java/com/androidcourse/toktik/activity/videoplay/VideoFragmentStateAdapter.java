@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.videoplay;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,6 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.androidcourse.toktik.activity.videoplay.VideoFragment;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.player.VideoSourceLoadFinishedCallback;
 import com.androidcourse.toktik.player.VideoSourceProvider;

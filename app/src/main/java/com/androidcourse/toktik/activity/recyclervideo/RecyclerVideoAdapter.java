@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.recyclervideo;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidcourse.toktik.R;
+import com.androidcourse.toktik.activity.recyclervideo.CoverViewHolder;
 import com.androidcourse.toktik.entity.Video;
 
 import java.util.ArrayList;

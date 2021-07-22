@@ -1,4 +1,4 @@
-package com.androidcourse.toktik;
+package com.androidcourse.toktik.activity.recyclervideo;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.androidcourse.toktik.R;
 import com.androidcourse.toktik.entity.Video;
 import com.androidcourse.toktik.network.ApiService;
+import com.androidcourse.toktik.util.ProxyServer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ public class RecyclerVideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_video);
+        ProxyServer.getProxy(getApplicationContext());
 
         List<Video> videos = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingleVideoPlayActivity">
+    tools:context=".activity.recyclervideo.SingleVideoPlayActivity">
 
     <LinearLayout
         android:id="@+id/videoFragment"
